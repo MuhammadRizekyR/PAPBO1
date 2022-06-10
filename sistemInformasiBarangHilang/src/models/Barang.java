@@ -2,11 +2,11 @@ package models;
 
 public class Barang {
     // PROPERTY
-    private String idBarang;
-    private String namaBarang;
-    private String jenisBarang;
-    private String warnaBarang;
-    private String lokasiBarang;
+    protected String idBarang;
+    protected String namaBarang;
+    protected String jenisBarang;
+    protected String warnaBarang;
+    protected String lokasiBarang;
     
     // CONSTRUCTOR
     public Barang(String idBarang, String namaBarang, String jenisBarang, String warnaBarang, String lokasiBarang) {

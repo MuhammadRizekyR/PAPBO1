@@ -8,7 +8,7 @@ import static sisteminformasibaranghilang.Main.kumpulanCivitasAkademik;
 import static sisteminformasibaranghilang.Main.kumpulanPengambilanBarang;
 import static sisteminformasibaranghilang.Main.kumpulanRequestPengambilanBarang;
 
-public class Petugas extends User{
+public class Petugas extends User implements HakPetugas{
     // CONSTRUCTOR
     public Petugas(String idPengguna, String namaPengguna, String emailPengguna, String nomorTeleponPengguna, String usernamePengguna, String passwordPengguna){
         super(idPengguna, namaPengguna, emailPengguna, nomorTeleponPengguna, usernamePengguna, passwordPengguna);

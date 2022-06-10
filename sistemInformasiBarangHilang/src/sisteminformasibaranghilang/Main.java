@@ -16,14 +16,6 @@ import models.Petugas;
 import models.User;
 import static models.User.login;
 
-/*
-TAMBAHIN MENU REQUEST BARANG HILANg
-TAMBAHIN MENU CLAIM BARANG TEMU -> INI UDAH NGGAK SIH? YANG REQUEST PENGAMBILAN BARANG
-PROPERTY LOKASI UNTUK CLASS BARANG TEMU DAN HILANG DIBUAT OPSIONAL -> udah
- 
-HANYA SARAN DARI BANG ADE, BOLEH DIIKUTIN ATAU TIDAK
-BARANG TEMU JIKA TIDAK DIAMBIL DALAM 7 X 24 JAM, MAKA BARANG BERHAK DI CLAIM SIAPAPUN
- */
 public class Main {
 
     // Objek class Admin
@@ -112,10 +104,10 @@ public class Main {
     public static CivitasAkademik tempCivak;
 
     // Objek class Date
-    public static Date date = new Date();
+    public static final Date date = new Date();
 
     // Objek class SimpleDateFormat
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     // Tanggal hari ini
     public static String stringDate = dateFormat.format(date);
@@ -166,6 +158,7 @@ public class Main {
     }
 
     public static void manajemenPengambilanBarang() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$           Manajemen Pengambilan Barang         $");
@@ -186,80 +179,82 @@ public class Main {
             }
             System.out.println("");
             int nomorPengambilanBarang;
-            if (menu == 1) {
-                tempPetugas.tampilPengambilanBarang();
-            } else if (menu == 2) {
-                tempPetugas.tampilPengambilanBarang();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang: ");
-                        nomorPengambilanBarang = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang berupa bilangan bulat!\n");
-                    }
-                }
-                System.out.println("");
-                if (nomorPengambilanBarang >= 0 && nomorPengambilanBarang < kumpulanPengambilanBarang.size()) {
+            switch (menu) {
+                case 1 -> tempPetugas.tampilPengambilanBarang();
+                case 2 -> {
+                    tempPetugas.tampilPengambilanBarang();
                     while (true) {
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$             Ubah Pengambilan Barang            $");
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$ [1] Tanggal Pengambilan Barang                 $");
-                        System.out.println("$ [2] Id Barang                                  $");
-                        System.out.println("$ [3] Id Pengambil                               $");
-                        System.out.println("$ [4] Kembali                                    $");
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        try {
+                            System.out.print("$ Masukkan nomor barang: ");
+                            nomorPengambilanBarang = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor barang berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorPengambilanBarang >= 0 && nomorPengambilanBarang < kumpulanPengambilanBarang.size()) {
                         while (true) {
-                            try {
-                                System.out.print("$ Masukkan menu: ");
-                                menu = Integer.parseInt(input.nextLine());
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$             Ubah Pengambilan Barang            $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$ [1] Tanggal Pengambilan Barang                 $");
+                            System.out.println("$ [2] Id Barang                                  $");
+                            System.out.println("$ [3] Id Pengambil                               $");
+                            System.out.println("$ [4] Kembali                                    $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            while (true) {
+                                try {
+                                    System.out.print("$ Masukkan menu: ");
+                                    menu = Integer.parseInt(input.nextLine());
+                                    break;
+                                } catch (NumberFormatException ex) {
+                                    System.out.println("\nMenu berupa bilangan bulat!\n");
+                                }
+                            }
+                            System.out.println("");
+                            if (menu > 0 && menu < 4) {
+                                tempPetugas.ubahPengambilanBarang(menu, nomorPengambilanBarang);
+                                System.out.println("\nData pengambilan barang berhasil diubah!\n");
+                            } else if (menu == 4) {
                                 break;
-                            } catch (NumberFormatException ex) {
-                                System.out.println("\nMenu berupa bilangan bulat!\n");
+                            } else {
+                                System.out.println("\nPilihan tidak ditemukan!\n");
                             }
                         }
-                        System.out.println("");
-                        if (menu > 0 && menu < 4) {
-                            tempPetugas.ubahBarangTemu(menu, nomorPengambilanBarang);
-                            System.out.println("\nData pengambilan barang berhasil diubah!\n");
-                        } else if (menu == 4) {
+                    } else {
+                        System.out.println("\nNomor petugas tidak ditemukan!\n");
+                    }
+                }
+                case 3 -> {
+                    tempPetugas.tampilPengambilanBarang();
+                    System.out.println("HAPUS PENGAMBILAN BARANG\n");
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor pengambilan barang: ");
+                            nomorPengambilanBarang = Integer.parseInt(input.nextLine()) - 1;
                             break;
-                        } else {
-                            System.out.println("\nPilihan tidak ditemukan!\n");
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor pengambilan barang berupa bilangan bulat!\n");
                         }
-                    }
-                } else {
-                    System.out.println("\nNomor petugas tidak ditemukan!\n");
-                }
-            } else if (menu == 3) {
-                tempPetugas.tampilPengambilanBarang();
-                System.out.println("HAPUS PENGAMBILAN BARANG\n");
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor pengambilan barang: ");
-                        nomorPengambilanBarang = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor pengambilan barang berupa bilangan bulat!\n");
+                    }   System.out.println("");
+                    if (nomorPengambilanBarang >= 0 && nomorPengambilanBarang < kumpulanPengambilanBarang.size()) {
+                        tempPetugas.hapusPengambilanBarang(nomorPengambilanBarang);
+                        System.out.println("Data pengambilan barang berhasil dihapus!\n");
+                    } else {
+                        System.out.println("\nData pengambilan barang tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorPengambilanBarang >= 0 && nomorPengambilanBarang < kumpulanPengambilanBarang.size()) {
-                    tempPetugas.hapusPengambilanBarang(nomorPengambilanBarang);
-                    System.out.println("Data pengambilan barang berhasil dihapus!\n");
-                } else {
-                    System.out.println("\nData pengambilan barang tidak ditemukan!\n");
+                case 4 -> {
+                    break OUTER;
                 }
-            } else if (menu == 4) {
-                break;
-            } else {
-
+                default -> {
+                }
             }
         }
     }
 
     public static void manajemenBarangTemu() {
+        OUTER_1:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$              Manajemen Barang Temu             $");
@@ -281,72 +276,27 @@ public class Main {
             }
             System.out.println("");
             int nomorBarangTemu;
-            if (menu == 1) {
-                tempPetugas.tampilBarangTemu();
-            } else if (menu == 2) {
-                String idBarangTemu, namaBarangTemu, jenisBarangTemu, warnaBarangTemu, lokasiBarangTemu,
-                        tanggalBarangTemu;
-                idBarangTemu = UUID.randomUUID().toString();
-                System.out.print("$ Masukkan nama barang temu: ");
-                namaBarangTemu = input.nextLine();
-                System.out.print("$ Masukkan jenis barang temu: ");
-                jenisBarangTemu = input.nextLine();
-                System.out.print("$ Masukkan warna barang temu: ");
-                warnaBarangTemu = input.nextLine();
-                System.out.print("$ Masukkan lokasi barang temu: ");
-                lokasiBarangTemu = input.nextLine();
-                while (true) {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$                     Tanggal                    $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$ [1] Hari ini                                   $");
-                    System.out.println("$ [2] Custom                                     $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    while (true) {
-                        try {
-                            System.out.print("$ Masukkan menu: ");
-                            menu = Integer.parseInt(input.nextLine());
-                            break;
-                        } catch (NumberFormatException ex) {
-                            System.out.println("\nMenu berupa bilangan bulat!\n");
-                        }
-                    }
-                    if (menu == 1) {
-                        tanggalBarangTemu = stringDate;
-                        break;
-                    } else if (menu == 2) {
-                        System.out.print("$ Masukkan tanggal barang temu(DD-MM-YYYY): ");
-                        tanggalBarangTemu = input.nextLine();
-                        break;
-                    } else {
-                        System.out.println("\nPilihan tidak ditemukan!\n");
-                    }
-                }
-                tempPetugas.tambahBarangTemu(idBarangTemu, namaBarangTemu, jenisBarangTemu, warnaBarangTemu,
-                        lokasiBarangTemu, tanggalBarangTemu, tempPetugas.getIdPengguna());
-            } else if (menu == 3) {
-                tempPetugas.tampilBarangTemu();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang: ");
-                        nomorBarangTemu = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang berupa bilangan bulat!\n");
-                    }
-                }
-                System.out.println("");
-                if (nomorBarangTemu >= 0 && nomorBarangTemu < kumpulanBarangTemu.size()) {
+            switch (menu) {
+                case 1 -> tempPetugas.tampilBarangTemu();
+                case 2 -> {
+                    String idBarangTemu, namaBarangTemu, jenisBarangTemu, warnaBarangTemu, lokasiBarangTemu,
+                            tanggalBarangTemu;
+                    idBarangTemu = UUID.randomUUID().toString();
+                    System.out.print("$ Masukkan nama barang temu: ");
+                    namaBarangTemu = input.nextLine();
+                    System.out.print("$ Masukkan jenis barang temu: ");
+                    jenisBarangTemu = input.nextLine();
+                    System.out.print("$ Masukkan warna barang temu: ");
+                    warnaBarangTemu = input.nextLine();
+                    System.out.print("$ Masukkan lokasi barang temu: ");
+                    lokasiBarangTemu = input.nextLine();
+                    OUTER:
                     while (true) {
                         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$                Ubah Barang Temu                $");
+                        System.out.println("$                     Tanggal                    $");
                         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$ [1] Nama                                       $");
-                        System.out.println("$ [2] Jenis                                      $");
-                        System.out.println("$ [3] Warna                                      $");
-                        System.out.println("$ [4] Lokasi Temu                                $");
-                        System.out.println("$ [5] Tanggal Temu                               $");
-                        System.out.println("$ [6] Kembali                                    $");
+                        System.out.println("$ [1] Hari ini                                   $");
+                        System.out.println("$ [2] Custom                                     $");
                         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         while (true) {
                             try {
@@ -357,47 +307,97 @@ public class Main {
                                 System.out.println("\nMenu berupa bilangan bulat!\n");
                             }
                         }
-                        System.out.println("");
-                        if (menu > 0 && menu < 6) {
-                            tempPetugas.ubahBarangTemu(menu, nomorBarangTemu);
-                            System.out.println("\nData barang temu berhasil diubah!\n");
-                        } else if (menu == 6) {
-                            break;
-                        } else {
-                            System.out.println("\nMenu tidak ditemukan!\n");
+                        switch (menu) {
+                            case 1 -> {
+                                tanggalBarangTemu = stringDate;
+                                break OUTER;
+                            }
+                            case 2 -> {
+                                System.out.print("$ Masukkan tanggal barang temu(DD-MM-YYYY): ");
+                                tanggalBarangTemu = input.nextLine();
+                                break OUTER;
+                            }
+                            default -> System.out.println("\nPilihan tidak ditemukan!\n");
                         }
                     }
-                } else {
-                    System.out.println("\nNomor petugas tidak ditemukan!\n");
+                    tempPetugas.tambahBarangTemu(idBarangTemu, namaBarangTemu, jenisBarangTemu, warnaBarangTemu,
+                            lokasiBarangTemu, tanggalBarangTemu, tempPetugas.getIdPengguna());
                 }
-            } else if (menu == 4) {
-                tempPetugas.tampilBarangTemu();
-                System.out.println("HAPUS BARANG TEMU\n");
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang temu: ");
-                        nomorBarangTemu = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang temu berupa bilangan bulat!\n");
+                case 3 -> {
+                    tempPetugas.tampilBarangTemu();
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor barang: ");
+                            nomorBarangTemu = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor barang berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorBarangTemu >= 0 && nomorBarangTemu < kumpulanBarangTemu.size()) {
+                        while (true) {
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$                Ubah Barang Temu                $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$ [1] Nama                                       $");
+                            System.out.println("$ [2] Jenis                                      $");
+                            System.out.println("$ [3] Warna                                      $");
+                            System.out.println("$ [4] Lokasi Temu                                $");
+                            System.out.println("$ [5] Tanggal Temu                               $");
+                            System.out.println("$ [6] Kembali                                    $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            while (true) {
+                                try {
+                                    System.out.print("$ Masukkan menu: ");
+                                    menu = Integer.parseInt(input.nextLine());
+                                    break;
+                                } catch (NumberFormatException ex) {
+                                    System.out.println("\nMenu berupa bilangan bulat!\n");
+                                }
+                            }
+                            System.out.println("");
+                            if (menu > 0 && menu < 6) {
+                                tempPetugas.ubahBarangTemu(menu, nomorBarangTemu);
+                                System.out.println("\nData barang temu berhasil diubah!\n");
+                            } else if (menu == 6) {
+                                break;
+                            } else {
+                                System.out.println("\nMenu tidak ditemukan!\n");
+                            }
+                        }
+                    } else {
+                        System.out.println("\nNomor petugas tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorBarangTemu >= 0 && nomorBarangTemu < kumpulanBarangTemu.size()) {
-                    tempPetugas.hapusBarangTemu(nomorBarangTemu);
-                    System.out.println("Data barang temu berhasil dihapus!\n");
-                } else {
-                    System.out.println("\nNomor barang temu tidak ditemukan!\n");
+                case 4 -> {
+                    tempPetugas.tampilBarangTemu();
+                    System.out.println("HAPUS BARANG TEMU\n");
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor barang temu: ");
+                            nomorBarangTemu = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor barang temu berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorBarangTemu >= 0 && nomorBarangTemu < kumpulanBarangTemu.size()) {
+                        tempPetugas.hapusBarangTemu(nomorBarangTemu);
+                        System.out.println("Data barang temu berhasil dihapus!\n");
+                    } else {
+                        System.out.println("\nNomor barang temu tidak ditemukan!\n");
+                    }
                 }
-            } else if (menu == 5) {
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                case 5 -> {
+                    break OUTER_1;
+                }
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void manajemenBarangHilang() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$             Manajemen Barang Hilang            $");
@@ -417,36 +417,37 @@ public class Main {
             }
             System.out.println("");
             int nomorBarangHilang;
-            if (menu == 1) {
-                tempPetugas.tampilBarangHilang();
-            } else if (menu == 2) {
-                tempPetugas.tampilBarangHilang();
-                System.out.println("HAPUS BARANG HILANG\n");
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang hilang: ");
-                        nomorBarangHilang = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang hilang berupa bilangan bulat!\n");
+            switch (menu) {
+                case 1 -> tempPetugas.tampilBarangHilang();
+                case 2 -> {
+                    tempPetugas.tampilBarangHilang();
+                    System.out.println("HAPUS BARANG HILANG\n");
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor barang hilang: ");
+                            nomorBarangHilang = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor barang hilang berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorBarangHilang >= 0 && nomorBarangHilang < kumpulanBarangHilang.size()) {
+                        tempPetugas.hapusBarangHilang(nomorBarangHilang);
+                        System.out.println("Data barang hilang berhasil dihapus!\n");
+                    } else {
+                        System.out.println("\nData barang hilang tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorBarangHilang >= 0 && nomorBarangHilang < kumpulanBarangHilang.size()) {
-                    tempPetugas.hapusBarangHilang(nomorBarangHilang);
-                    System.out.println("Data barang hilang berhasil dihapus!\n");
-                } else {
-                    System.out.println("\nData barang hilang tidak ditemukan!\n");
+                case 3 -> {
+                    break OUTER;
                 }
-            } else if (menu == 3) {
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void manajemenCivitasAkademik() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$           Manajemen Civitas Akademik           $");
@@ -465,37 +466,38 @@ public class Main {
                 }
             }
             System.out.println("");
-            if (menu == 1) {
-                tempPetugas.tampilCivitasAkademik();
-            } else if (menu == 2) {
-                int nomorCivak;
-                tempPetugas.tampilCivitasAkademik();
-                System.out.println("HAPUS CIVITAS AKADEMIK\n");
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor civitas akademik: ");
-                        nomorCivak = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor civitas akademik berupa bilangan bulat!\n");
+            switch (menu) {
+                case 1 -> tempPetugas.tampilCivitasAkademik();
+                case 2 -> {
+                    int nomorCivak;
+                    tempPetugas.tampilCivitasAkademik();
+                    System.out.println("HAPUS CIVITAS AKADEMIK\n");
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor civitas akademik: ");
+                            nomorCivak = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor civitas akademik berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorCivak >= 0 && nomorCivak < kumpulanCivitasAkademik.size()) {
+                        tempPetugas.hapusCivitasAkademik(nomorCivak);
+                        System.out.println("Data Civitas Akademik berhasil dihapus!\n");
+                    } else {
+                        System.out.println("\nNomor civitas akademik tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorCivak >= 0 && nomorCivak < kumpulanCivitasAkademik.size()) {
-                    tempPetugas.hapusCivitasAkademik(nomorCivak);
-                    System.out.println("Data Civitas Akademik berhasil dihapus!\n");
-                } else {
-                    System.out.println("\nNomor civitas akademik tidak ditemukan!\n");
+                case 3 -> {
+                    break OUTER;
                 }
-            } else if (menu == 3) {
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void manajemenPetugas() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$                Manajemen Petugas               $");
@@ -517,107 +519,109 @@ public class Main {
             }
             System.out.println("");
             int nomorPetugas;
-            if (menu == 1) {
-                tempAdmin.tampilPetugas();
-            } else if (menu == 2) {
-                String idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas, usernamePetugas, passwordPetugas;
-                idPetugas = UUID.randomUUID().toString();
-                System.out.print("$ Masukkan nama petugas: ");
-                namaPetugas = input.nextLine();
-                System.out.print("$ Masukkan email petugas: ");
-                emailPetugas = input.nextLine();
-                System.out.print("$ Masukkan nomor telepon petugas: ");
-                nomorTeleponPetugas = input.nextLine();
-                while (true) {
-                    System.out.print("$ Masukkan username petugas: ");
-                    usernamePetugas = input.nextLine();
-                    if (usernameNotExists(usernamePetugas)) {
-                        break;
-                    } else {
-                        System.out.println("Username telah digunakan!");
-                    }
-                }
-                System.out.print("$ Masukkan password petugas: ");
-                passwordPetugas = input.nextLine();
-                tempAdmin.registerPetugas(idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas,
-                        usernamePetugas, passwordPetugas);
-                kumpulanUser.add(new Petugas(idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas,
-                        usernamePetugas, passwordPetugas));
-                System.out.println("\nData petugas berhasil ditambahkan!\n");
-            } else if (menu == 3) {
-                tempAdmin.tampilPetugas();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor petugas: ");
-                        nomorPetugas = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor petugas berupa bilangan bulat!\n");
-                    }
-                }
-                System.out.println("");
-                if (nomorPetugas >= 0 && nomorPetugas < kumpulanPetugas.size()) {
+            switch (menu) {
+                case 1 -> tempAdmin.tampilPetugas();
+                case 2 -> {
+                    String idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas, usernamePetugas, passwordPetugas;
+                    idPetugas = UUID.randomUUID().toString();
+                    System.out.print("$ Masukkan nama petugas: ");
+                    namaPetugas = input.nextLine();
+                    System.out.print("$ Masukkan email petugas: ");
+                    emailPetugas = input.nextLine();
+                    System.out.print("$ Masukkan nomor telepon petugas: ");
+                    nomorTeleponPetugas = input.nextLine();
                     while (true) {
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$                  Ubah Petugas                  $");
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("$ [1] Nama                                       $");
-                        System.out.println("$ [2] Email                                      $");
-                        System.out.println("$ [3] Nomor Telepon                              $");
-                        System.out.println("$ [4] Username                                   $");
-                        System.out.println("$ [5] Password                                   $");
-                        System.out.println("$ [6] Kembali                                    $");
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        while (true) {
-                            try {
-                                System.out.print("$ Masukkan menu: ");
-                                menu = Integer.parseInt(input.nextLine());
-                                break;
-                            } catch (NumberFormatException ex) {
-                                System.out.println("\nMenu berupa bilangan bulat!\n");
-                            }
-                        }
-                        System.out.println("");
-                        if (menu > 0 && menu < 6) {
-                            tempAdmin.ubahPetugas(menu, nomorPetugas);
-                            System.out.println("\nData petugas berhasil diubah!\n");
-                        } else if (menu == 6) {
+                        System.out.print("$ Masukkan username petugas: ");
+                        usernamePetugas = input.nextLine();
+                        if (usernameNotExists(usernamePetugas)) {
                             break;
                         } else {
-                            System.out.println("\nMenu tidak ditemukan!\n");
+                            System.out.println("Username telah digunakan!");
                         }
                     }
-                } else {
-                    System.out.println("\nNomor petugas tidak ditemukan!\n");
+                    System.out.print("$ Masukkan password petugas: ");
+                    passwordPetugas = input.nextLine();
+                    tempAdmin.registerPetugas(idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas,
+                            usernamePetugas, passwordPetugas);
+                    kumpulanUser.add(new Petugas(idPetugas, namaPetugas, emailPetugas, nomorTeleponPetugas,
+                            usernamePetugas, passwordPetugas));
+                    System.out.println("\nData petugas berhasil ditambahkan!\n");
                 }
-            } else if (menu == 4) {
-                tempAdmin.tampilPetugas();
-                System.out.println("HAPUS PETUGAS\n");
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor petugas: ");
-                        nomorPetugas = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor petugas berupa bilangan bulat!\n");
+                case 3 -> {
+                    tempAdmin.tampilPetugas();
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor petugas: ");
+                            nomorPetugas = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor petugas berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorPetugas >= 0 && nomorPetugas < kumpulanPetugas.size()) {
+                        while (true) {
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$                  Ubah Petugas                  $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            System.out.println("$ [1] Nama                                       $");
+                            System.out.println("$ [2] Email                                      $");
+                            System.out.println("$ [3] Nomor Telepon                              $");
+                            System.out.println("$ [4] Username                                   $");
+                            System.out.println("$ [5] Password                                   $");
+                            System.out.println("$ [6] Kembali                                    $");
+                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                            while (true) {
+                                try {
+                                    System.out.print("$ Masukkan menu: ");
+                                    menu = Integer.parseInt(input.nextLine());
+                                    break;
+                                } catch (NumberFormatException ex) {
+                                    System.out.println("\nMenu berupa bilangan bulat!\n");
+                                }
+                            }
+                            System.out.println("");
+                            if (menu > 0 && menu < 6) {
+                                tempAdmin.ubahPetugas(menu, nomorPetugas);
+                                System.out.println("\nData petugas berhasil diubah!\n");
+                            } else if (menu == 6) {
+                                break;
+                            } else {
+                                System.out.println("\nMenu tidak ditemukan!\n");
+                            }
+                        }
+                    } else {
+                        System.out.println("\nNomor petugas tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorPetugas >= 0 && nomorPetugas < kumpulanPetugas.size()) {
-                    tempAdmin.hapusPetugas(nomorPetugas);
-                    System.out.println("\nPetugas berhasil dihapus!\n");
-                } else {
-                    System.out.println("\nNomor petugas tidak ditemukan!\n");
+                case 4 -> {
+                    tempAdmin.tampilPetugas();
+                    System.out.println("HAPUS PETUGAS\n");
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor petugas: ");
+                            nomorPetugas = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor petugas berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorPetugas >= 0 && nomorPetugas < kumpulanPetugas.size()) {
+                        tempAdmin.hapusPetugas(nomorPetugas);
+                        System.out.println("\nPetugas berhasil dihapus!\n");
+                    } else {
+                        System.out.println("\nNomor petugas tidak ditemukan!\n");
+                    }
                 }
-            } else if (menu == 5) {
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                case 5 -> {
+                    break OUTER;
+                }
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void menuVerifikasiPengambilanBarang() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$          Verifikasi Pengambilan Barang         $");
@@ -638,73 +642,57 @@ public class Main {
             }
             System.out.println("");
             int nomorRequest;
-            if (menu == 1) {
-                tempPetugas.tampilRequestPengambilanBarang();
-            } else if (menu == 2) {
-                tempPetugas.tampilRequestPengambilanBarang();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor request: ");
-                        nomorRequest = Integer.parseInt(input.nextLine())-1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor request berupa bilangan bulat!\n");
-                    }
-                }
-                System.out.println("");
-                if (nomorRequest >= 0 && nomorRequest < kumpulanRequestPengambilanBarang.size()) {
-                    for (int i = 0; i < kumpulanBarangTemu.size(); i++){
-                        if (kumpulanBarangTemu.get(i).getIdBarang().equals(kumpulanRequestPengambilanBarang.get(nomorRequest).getIdBarang())){
-                            kumpulanBarangTemu.get(i).setNamaBarang(kumpulanBarangTemu.get(i).getNamaBarang());
+            switch (menu) {
+                case 1 -> tempPetugas.tampilRequestPengambilanBarang();
+                case 2 -> {
+                    tempPetugas.tampilRequestPengambilanBarang();
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor request: ");
+                            nomorRequest = Integer.parseInt(input.nextLine())-1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor request berupa bilangan bulat!\n");
                         }
-                    }
-                    kumpulanPengambilanBarang.add(kumpulanRequestPengambilanBarang.get(nomorRequest));
-                    kumpulanRequestPengambilanBarang.remove(kumpulanRequestPengambilanBarang.get(nomorRequest));
-                    kumpulanBarangTemu.remove(nomorRequest);
-//                    kumpulanBarangTemu.remove(kumpulanRequestPengambilanBarang.get(nomorRequest).getIdBarang());
-//                    for (var barangTemu : kumpulanBarangTemu){
-////                    kumpulanBarangTemu.remove(kumpulanRequestPengambilanBarang.get(nomorRequest).equals(barangTemu.getIdBarang()));
-//                    }
-//                    for (var barangTemu : kumpulanBarangTemu) {
-//                        if (barangTemu.getIdBarang().equals(kumpulanRequestPengambilanBarang.get(nomorRequest).getIdBarang())) {
-//                            kumpulanBarangTemu.remove(nomorRequest);
-//                        }
-//                    }
-//                } else if(nomorRequest >= 0 && nomorRequest < kumpulanBarangTemu.size()){
-//                    kumpulanBarangTemu.remove(nomorRequest);
-//                    for (int i = 0; i < kumpulanBarangTemu.size(); i++){
-//                        if (kumpulanBarangTemu.get(i).getIdBarang().equals(kumpulanRequestPengambilanBarang.get(nomorRequest).getIdBarang())){
-//                            kumpulanBarangTemu.get(i).setNamaBarang(kumpulanBarangTemu.get(i).getNamaBarang());
-//                        }
-//                    }
-                }else {
-                    System.out.println("\nNomor request tidak ditemukan!\n");
-                }
-            } else if (menu == 3) {
-                tempPetugas.tampilRequestPengambilanBarang();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor request: ");
-                        nomorRequest = Integer.parseInt(input.nextLine())-1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor request berupa bilangan bulat!\n");
+                    }   System.out.println("");
+                    if (nomorRequest >= 0 && nomorRequest < kumpulanRequestPengambilanBarang.size()) {
+                        for (int i = 0; i < kumpulanBarangTemu.size(); i++){
+                            if (kumpulanBarangTemu.get(i).getIdBarang().equals(kumpulanRequestPengambilanBarang.get(nomorRequest).getIdBarang())){
+                                kumpulanBarangTemu.get(i).setNamaBarang(kumpulanBarangTemu.get(i).getNamaBarang());
+                            }
+                        }
+                        kumpulanPengambilanBarang.add(kumpulanRequestPengambilanBarang.get(nomorRequest));
+                        kumpulanRequestPengambilanBarang.remove(kumpulanRequestPengambilanBarang.get(nomorRequest));
+                        kumpulanBarangTemu.remove(nomorRequest);
+                    }else {
+                        System.out.println("\nNomor request tidak ditemukan!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorRequest >= 0 && nomorRequest < kumpulanRequestPengambilanBarang.size()) {
-                    kumpulanRequestPengambilanBarang.remove(kumpulanRequestPengambilanBarang.get(nomorRequest));
+                case 3 -> {
+                    tempPetugas.tampilRequestPengambilanBarang();
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor request: ");
+                            nomorRequest = Integer.parseInt(input.nextLine())-1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor request berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorRequest >= 0 && nomorRequest < kumpulanRequestPengambilanBarang.size()) {
+                        kumpulanRequestPengambilanBarang.remove(kumpulanRequestPengambilanBarang.get(nomorRequest));
+                    }
                 }
-
-            } else if (menu == 4) {
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                case 4 -> {
+                    break OUTER;
+                }
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void menuCivitasAkademik() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$              Menu Civitas Akademik             $");
@@ -728,210 +716,220 @@ public class Main {
                 }
             }
             System.out.println("");
-            if (menu == 1) {
-                tempCivak.tampilBarangHilang();
-            } else if (menu == 2) {
-                tempCivak.tampilBarangTemu();
-            } else if (menu == 3) {
-                String idBarangHilang, namaBarangHilang, jenisBarangHilang, warnaBarangHilang, lokasiBarangHilang,
-                        tanggalBarangHilang;
-                while (true) {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$            Tambah Data Barang Hilang           $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$ [1] Dengan Lokasi                              $");
-                    System.out.println("$ [2] Tanpa Lokasi                               $");
-                    System.out.println("$ [3] Kembali                                    $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            switch (menu) {
+                case 1 -> tempCivak.tampilBarangHilang();
+                case 2 -> tempCivak.tampilBarangTemu();
+                case 3 -> {
+                    String idBarangHilang, namaBarangHilang, jenisBarangHilang, warnaBarangHilang, lokasiBarangHilang,
+                            tanggalBarangHilang;
+                    OUTER_2:
                     while (true) {
-                        try {
-                            System.out.print("$ Masukkan menu: ");
-                            menu = Integer.parseInt(input.nextLine());
-                            break;
-                        } catch (NumberFormatException ex) {
-                            System.out.println("\nMenu berupa bilangan bulat!\n");
-                        }
-                    }
-                    System.out.println("");
-                    if (menu == 1 || menu == 2) {
-                        idBarangHilang = UUID.randomUUID().toString();
-                        System.out.print("$ Masukkan nama barang hilang: ");
-                        namaBarangHilang = input.nextLine();
-                        System.out.print("$ Masukkan jenis barang hilang: ");
-                        jenisBarangHilang = input.nextLine();
-                        System.out.print("$ Masukkan warna barang hilang: ");
-                        warnaBarangHilang = input.nextLine();
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        System.out.println("$            Tambah Data Barang Hilang           $");
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        System.out.println("$ [1] Dengan Lokasi                              $");
+                        System.out.println("$ [2] Tanpa Lokasi                               $");
+                        System.out.println("$ [3] Kembali                                    $");
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         while (true) {
-                            int menuTanggal;
-                            System.out.println("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            System.out.println("$                     Tanggal                    $");
-                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            System.out.println("$ [1] Hari ini                                   $");
-                            System.out.println("$ [2] Custom                                     $");
-                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            while (true) {
-                                try {
-                                    System.out.print("$ Masukkan menu: ");
-                                    menuTanggal = Integer.parseInt(input.nextLine());
-                                    break;
-                                } catch (NumberFormatException ex) {
-                                    System.out.println("\nMenu berupa bilangan bulat!\n");
-                                }
-                            }
-                            if (menuTanggal == 1) {
-                                tanggalBarangHilang = stringDate;
+                            try {
+                                System.out.print("$ Masukkan menu: ");
+                                menu = Integer.parseInt(input.nextLine());
                                 break;
-                            } else if (menuTanggal == 2) {
-                                System.out.print("$ Masukkan tanggal barang hilang(DD-MM-YYYY): ");
-                                tanggalBarangHilang = input.nextLine();
-                                break;
-                            } else {
-                                System.out.println("\nPilihan tidak ditemukan!\n");
+                            } catch (NumberFormatException ex) {
+                                System.out.println("\nMenu berupa bilangan bulat!\n");
                             }
                         }
-                        if (menu == 1) {
-                            System.out.print("\n$ Masukkan lokasi barang hilang: ");
-                            lokasiBarangHilang = input.nextLine();
-                            tempCivak.tambahBarangHilang(idBarangHilang, namaBarangHilang, jenisBarangHilang,
-                                    warnaBarangHilang, lokasiBarangHilang, tanggalBarangHilang,
-                                    tempCivak.getIdPengguna());
-                        } else {
-                            tempCivak.tambahBarangHilang(idBarangHilang, namaBarangHilang, jenisBarangHilang,
-                                    warnaBarangHilang, tanggalBarangHilang, tempCivak.getIdPengguna());
-                        }
-                        System.out.println("\nBarang hilang berhasil dilaporkan\n");
                         System.out.println("");
-                        break;
-                    } else if (menu == 3) {
-                        break;
-                    } else {
-                        System.out.println("\nMenu tidak ditemukan!\n");
-                    }
-                }
-            } else if (menu == 4) {
-                int nomorBarangHilang;
-                System.out.println("Ubah data barang hilang yang user ini laporkan saja");
-                tempCivak.tampilBarangHilang();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang: ");
-                        nomorBarangHilang = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang berupa bilangan bulat!\n");
-                    }
-                }
-                System.out.println("");
-                if (nomorBarangHilang >= 0 && nomorBarangHilang < kumpulanBarangHilang.size()) {
-                    if (kumpulanBarangHilang.get(nomorBarangHilang).getIdPemilik().equals(tempCivak.getIdPengguna())) {
-                        while (true) {
-                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            System.out.println("$               Ubah Barang Hilang               $");
-                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            System.out.println("$ [1] Nama                                       $");
-                            System.out.println("$ [2] Jenis                                      $");
-                            System.out.println("$ [3] Warna                                      $");
-                            System.out.println("$ [4] Lokasi Hilang                              $");
-                            System.out.println("$ [5] Tanggal Hilang                             $");
-                            System.out.println("$ [6] Kembali                                    $");
-                            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                            while (true) {
-                                try {
-                                    System.out.print("$ Masukkan menu: ");
-                                    menu = Integer.parseInt(input.nextLine());
-                                    break;
-                                } catch (NumberFormatException ex) {
-                                    System.out.println("\nMenu berupa bilangan bulat!\n");
+                        switch (menu) {
+                            case 1, 2 -> {
+                                idBarangHilang = UUID.randomUUID().toString();
+                                System.out.print("$ Masukkan nama barang hilang: ");
+                                namaBarangHilang = input.nextLine();
+                                System.out.print("$ Masukkan jenis barang hilang: ");
+                                jenisBarangHilang = input.nextLine();
+                                System.out.print("$ Masukkan warna barang hilang: ");
+                                warnaBarangHilang = input.nextLine();
+                                OUTER_1:
+                                while (true) {
+                                    int menuTanggal;
+                                    System.out.println("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                    System.out.println("$                     Tanggal                    $");
+                                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                    System.out.println("$ [1] Hari ini                                   $");
+                                    System.out.println("$ [2] Custom                                     $");
+                                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                    while (true) {
+                                        try {
+                                            System.out.print("$ Masukkan menu: ");
+                                            menuTanggal = Integer.parseInt(input.nextLine());
+                                            break;
+                                        } catch (NumberFormatException ex) {
+                                            System.out.println("\nMenu berupa bilangan bulat!\n");
+                                        }
+                                    }
+                                    switch (menuTanggal) {
+                                        case 1 -> {
+                                            tanggalBarangHilang = stringDate;
+                                            break OUTER_1;
+                                        }
+                                        case 2 -> {
+                                            System.out.print("$ Masukkan tanggal barang hilang(DD-MM-YYYY): ");
+                                            tanggalBarangHilang = input.nextLine();
+                                            break OUTER_1;
+                                        }
+                                        default -> System.out.println("\nPilihan tidak ditemukan!\n");
+                                    }
                                 }
+                                if (menu == 1) {
+                                    System.out.print("\n$ Masukkan lokasi barang hilang: ");
+                                    lokasiBarangHilang = input.nextLine();
+                                    tempCivak.tambahBarangHilang(idBarangHilang, namaBarangHilang, jenisBarangHilang,
+                                            warnaBarangHilang, lokasiBarangHilang, tanggalBarangHilang,
+                                            tempCivak.getIdPengguna());
+                                } else {
+                                    tempCivak.tambahBarangHilang(idBarangHilang, namaBarangHilang, jenisBarangHilang,
+                                            warnaBarangHilang, tanggalBarangHilang, tempCivak.getIdPengguna());
+                                }
+                                System.out.println("\nBarang hilang berhasil dilaporkan\n");
+                                System.out.println("");
+                                break OUTER_2;
                             }
-                            System.out.println("");
-                            if (menu > 0 && menu < 6) {
-                                tempCivak.ubahBarangHilang(menu, nomorBarangHilang);
-                                System.out.println("\nData barang temu berhasil diubah!\n");
-                            } else if (menu == 6) {
-                                break;
-                            } else {
-                                System.out.println("\nMenu tidak ditemukan!\n");
+                            case 3 -> {
+                                break OUTER_2;
                             }
+                            default -> System.out.println("\nMenu tidak ditemukan!\n");
                         }
-                    } else {
-                        System.out.println("\nAnda tidak dapat mengubah data milik orang lain!\n");
-                    }
-                } else {
-                    System.out.println("\nNomor petugas tidak ditemukan!\n");
-                }
-            } else if (menu == 5) {
-                int nomorRequest;
-                tempCivak.tampilBarangTemu();
-                while (true) {
-                    try {
-                        System.out.print("$ Masukkan nomor barang: ");
-                        nomorRequest = Integer.parseInt(input.nextLine()) - 1;
-                        break;
-                    } catch (NumberFormatException ex) {
-                        System.out.println("\nNomor barang berupa bilangan bulat!\n");
                     }
                 }
-                System.out.println("");
-                if (nomorRequest >= 0 && nomorRequest < kumpulanBarangTemu.size()) {
-                    tempCivak.requestAmbilBarang(UUID.randomUUID().toString(), stringDate,
-                            kumpulanBarangTemu.get(nomorRequest).getIdBarang(), tempCivak.getIdPengguna());
-                    System.out.println("\nData request berhasil ditambahkan!\n");
-                } else {
-                    System.out.println("\nNomor barang tidak ditemukan!\n");
-                }
-            } else if (menu == 6) {
-                tempCivak.tampilProfileCivitasAkademik();
-                System.out.println("");
-            } else if (menu == 7) {
-                tempCivak.tampilProfileCivitasAkademik();
-                System.out.println("");
-                while (true) {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$                  Ubah Profile                  $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    System.out.println("$ [1] Nama                                       $");
-                    System.out.println("$ [2] Email                                      $");
-                    System.out.println("$ [3] Nomor Telepon                              $");
-                    System.out.println("$ [4] Username                                   $");
-                    System.out.println("$ [5] Password                                   $");
-                    System.out.println("$ [6] Peran                                      $");
-                    System.out.println("$ [7] Kembali                                    $");
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+                case 4 -> {
+                    int nomorBarangHilang;
+                    System.out.println("Ubah data barang hilang yang user ini laporkan saja");
+                    tempCivak.tampilBarangHilang();
                     while (true) {
                         try {
-                            System.out.print("$ Masukkan menu: ");
-                            menu = Integer.parseInt(input.nextLine());
+                            System.out.print("$ Masukkan nomor barang: ");
+                            nomorBarangHilang = Integer.parseInt(input.nextLine()) - 1;
                             break;
                         } catch (NumberFormatException ex) {
-                            System.out.println("\nMenu berupa bilangan bulat!\n");
+                            System.out.println("\nNomor barang berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorBarangHilang >= 0 && nomorBarangHilang < kumpulanBarangHilang.size()) {
+                        if (kumpulanBarangHilang.get(nomorBarangHilang).getIdPemilik().equals(tempCivak.getIdPengguna())) {
+                            while (true) {
+                                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                System.out.println("$               Ubah Barang Hilang               $");
+                                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                System.out.println("$ [1] Nama                                       $");
+                                System.out.println("$ [2] Jenis                                      $");
+                                System.out.println("$ [3] Warna                                      $");
+                                System.out.println("$ [4] Lokasi Hilang                              $");
+                                System.out.println("$ [5] Tanggal Hilang                             $");
+                                System.out.println("$ [6] Kembali                                    $");
+                                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                                while (true) {
+                                    try {
+                                        System.out.print("$ Masukkan menu: ");
+                                        menu = Integer.parseInt(input.nextLine());
+                                        break;
+                                    } catch (NumberFormatException ex) {
+                                        System.out.println("\nMenu berupa bilangan bulat!\n");
+                                    }
+                                }
+                                System.out.println("");
+                                if (menu > 0 && menu < 6) {
+                                    tempCivak.ubahBarangHilang(menu, nomorBarangHilang);
+                                    System.out.println("\nData barang temu berhasil diubah!\n");
+                                } else if (menu == 6) {
+                                    break;
+                                } else {
+                                    System.out.println("\nMenu tidak ditemukan!\n");
+                                }
+                            }
+                        } else {
+                            System.out.println("\nAnda tidak dapat mengubah data milik orang lain!\n");
+                        }
+                    } else {
+                        System.out.println("\nNomor petugas tidak ditemukan!\n");
+                    }
+                }
+                case 5 -> {
+                    int nomorRequest;
+                    tempCivak.tampilBarangTemu();
+                    while (true) {
+                        try {
+                            System.out.print("$ Masukkan nomor barang: ");
+                            nomorRequest = Integer.parseInt(input.nextLine()) - 1;
+                            break;
+                        } catch (NumberFormatException ex) {
+                            System.out.println("\nNomor barang berupa bilangan bulat!\n");
+                        }
+                    }   System.out.println("");
+                    if (nomorRequest >= 0 && nomorRequest < kumpulanBarangTemu.size()) {
+                        tempCivak.requestAmbilBarang(UUID.randomUUID().toString(), stringDate,
+                                kumpulanBarangTemu.get(nomorRequest).getIdBarang(), tempCivak.getIdPengguna());
+                        System.out.println("\nData request berhasil ditambahkan!\n");
+                    } else {
+                        System.out.println("\nNomor barang tidak ditemukan!\n");
+                    }
+                }
+                case 6 -> {
+                    tempCivak.tampilProfileCivitasAkademik();
+                    System.out.println("");
+                }
+                case 7 -> {
+                    tempCivak.tampilProfileCivitasAkademik();
+                    System.out.println("");
+                    while (true) {
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        System.out.println("$                  Ubah Profile                  $");
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        System.out.println("$ [1] Nama                                       $");
+                        System.out.println("$ [2] Email                                      $");
+                        System.out.println("$ [3] Nomor Telepon                              $");
+                        System.out.println("$ [4] Username                                   $");
+                        System.out.println("$ [5] Password                                   $");
+                        System.out.println("$ [6] Peran                                      $");
+                        System.out.println("$ [7] Kembali                                    $");
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        while (true) {
+                            try {
+                                System.out.print("$ Masukkan menu: ");
+                                menu = Integer.parseInt(input.nextLine());
+                                break;
+                            } catch (NumberFormatException ex) {
+                                System.out.println("\nMenu berupa bilangan bulat!\n");
+                            }
+                        }
+                        System.out.println("");
+                        if (menu > 0 && menu < 7) {
+                            tempCivak.ubahCivitasAkademik(menu);
+                            System.out.println("\nProfile anda berhasil diubah!\n");
+                        } else if (menu == 7) {
+                            break;
+                        } else {
+                            System.out.println("\nMenu tidak ditemukan!\n");
                         }
                     }
+                }
+                case 8 -> {
+                    System.out.print("$ Konfirmasi logout(y/n): ");
+                    String konfirmasi = input.nextLine();
                     System.out.println("");
-                    if (menu > 0 && menu < 7) {
-                        tempCivak.ubahCivitasAkademik(menu);
-                        System.out.println("\nProfile anda berhasil diubah!\n");
-                    } else if (menu == 7) {
-                        break;
-                    } else {
-                        System.out.println("\nMenu tidak ditemukan!\n");
+                    if (konfirmasi.equals("y")) {
+                        tempCivak = null;
+                        break OUTER;
                     }
                 }
-            } else if (menu == 8) {
-                System.out.print("$ Konfirmasi logout(y/n): ");
-                String konfirmasi = input.nextLine();
-                System.out.println("");
-                if (konfirmasi.equals("y")) {
-                    tempCivak = null;
-                    break;
-                }
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     public static void menuPetugas() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$                  Menu Petugas                  $");
@@ -953,32 +951,28 @@ public class Main {
                 }
             }
             System.out.println("");
-            if (menu == 1) {
-                manajemenCivitasAkademik();
-            } else if (menu == 2) {
-                manajemenBarangHilang();
-            } else if (menu == 3) {
-                manajemenBarangTemu();
-            } else if (menu == 4) {
-                manajemenPengambilanBarang();
-            } else if (menu == 5) {
-                menuVerifikasiPengambilanBarang();
-            } else if (menu == 6) {
-                System.out.print("$ Konfirmasi logout(y/n): ");
-                String konfirmasi = input.nextLine();
-                System.out.println("");
-                if (konfirmasi.equals("y")) {
-                    tempPetugas = null;
-                    break;
+            switch (menu) {
+                case 1 -> manajemenCivitasAkademik();
+                case 2 -> manajemenBarangHilang();
+                case 3 -> manajemenBarangTemu();
+                case 4 -> manajemenPengambilanBarang();
+                case 5 -> menuVerifikasiPengambilanBarang();
+                case 6 -> {
+                    System.out.print("$ Konfirmasi logout(y/n): ");
+                    String konfirmasi = input.nextLine();
+                    System.out.println("");
+                    if (konfirmasi.equals("y")) {
+                        tempPetugas = null;
+                        break OUTER;
+                    }
                 }
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
-
         }
     }
 
     public static void menuAdmin() {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$                   Menu Admin                   $");
@@ -1000,32 +994,29 @@ public class Main {
                 }
             }
             System.out.println("");
-            if (menu == 1) {
-                manajemenPetugas();
-            } else if (menu == 2) {
-                tempAdmin.tampilCivitasAkademik();
-            } else if (menu == 3) {
-                tempAdmin.tampilBarangHilang();
-            } else if (menu == 4) {
-                tempAdmin.tampilBarangTemu();
-            } else if (menu == 5) {
-                tempAdmin.tampilPengambilanBarang();
-            } else if (menu == 6) {
-                System.out.print("$ Konfirmasi logout(y/n): ");
-                String konfirmasi = input.nextLine();
-                System.out.println("");
-                if (konfirmasi.equals("y")) {
-                    tempAdmin = null;
-                    break;
+            switch (menu) {
+                case 1 -> manajemenPetugas();
+                case 2 -> tempAdmin.tampilCivitasAkademik();
+                case 3 -> tempAdmin.tampilBarangHilang();
+                case 4 -> tempAdmin.tampilBarangTemu();
+                case 5 -> tempAdmin.tampilPengambilanBarang();
+                case 6 -> {
+                    System.out.print("$ Konfirmasi logout(y/n): ");
+                    String konfirmasi = input.nextLine();
+                    System.out.println("");
+                    if (konfirmasi.equals("y")) {
+                        tempAdmin = null;
+                        break OUTER;
+                    }
                 }
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }
 
     // METHOD PERTAMA YANG AKAN DIJALANKAN PADA SAAT PROGRAM DIJALANKAN
     public static void main(String[] args) {
+        OUTER:
         while (true) {
             System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             System.out.println("$         Sistem Informasi Barang Hilang         $");
@@ -1044,54 +1035,57 @@ public class Main {
                 }
             }
             System.out.println("");
-            if (menu == 1) {
-                System.out.print("$ Masukkan Username: ");
-                String username = input.nextLine();
-                System.out.print("$ Masukkan Password: ");
-                String password = input.nextLine();
-                System.out.println("");
-                if (login(username, password)) {
-                    if (tempAdmin != null) {
-                        menuAdmin();
-                    } else if (tempPetugas != null) {
-                        menuPetugas();
-                    } else if (tempCivak != null) {
-                        menuCivitasAkademik();
-                    }
-                } else {
-                    System.out.println("\nusername atau password salah!\n");
-                }
-            } else if (menu == 2) {
-                String namaPendaftar, emailPendaftar, nomorTeleponPendaftar, peranPendaftar, usernamePendaftar,
-                        passwordPendaftar;
-                System.out.print("$ Masukkan Nama Anda: ");
-                namaPendaftar = input.nextLine();
-                System.out.print("$ Masukkan Email Anda: ");
-                emailPendaftar = input.nextLine();
-                System.out.print("$ Masukkan Nomor Telepon Anda: ");
-                nomorTeleponPendaftar = input.nextLine();
-                System.out.print("$ Masukkan Peran Anda: ");
-                peranPendaftar = input.nextLine();
-                while (true) {
-                    System.out.print("$ Masukkan Username Akun: ");
-                    usernamePendaftar = input.nextLine();
-                    if (usernameNotExists(usernamePendaftar)) {
-                        break;
+            switch (menu) {
+                case 1 -> {
+                    System.out.print("$ Masukkan Username: ");
+                    String username = input.nextLine();
+                    System.out.print("$ Masukkan Password: ");
+                    String password = input.nextLine();
+                    System.out.println("");
+                    if (login(username, password)) {
+                        if (tempAdmin != null) {
+                            menuAdmin();
+                        } else if (tempPetugas != null) {
+                            menuPetugas();
+                        } else if (tempCivak != null) {
+                            menuCivitasAkademik();
+                        }
                     } else {
-                        System.out.println("\nMasukkan username yang lain!\n");
+                        System.out.println("\nusername atau password salah!\n");
                     }
                 }
-                System.out.print("$ Masukkan Password Akun: ");
-                passwordPendaftar = input.nextLine();
-                kumpulanCivitasAkademik.add(new CivitasAkademik(UUID.randomUUID().toString(), namaPendaftar,
-                        emailPendaftar, nomorTeleponPendaftar,
-                        usernamePendaftar, passwordPendaftar, peranPendaftar));
-            } else if (menu == 3) {
-                System.out.println("\nKeluar Aplikasi...\n");
-                System.out.println("Terima Kasih");
-                break;
-            } else {
-                System.out.println("\nMenu tidak ditemukan!\n");
+                case 2 -> {
+                    String namaPendaftar, emailPendaftar, nomorTeleponPendaftar, peranPendaftar, usernamePendaftar,
+                            passwordPendaftar;
+                    System.out.print("$ Masukkan Nama Anda: ");
+                    namaPendaftar = input.nextLine();
+                    System.out.print("$ Masukkan Email Anda: ");
+                    emailPendaftar = input.nextLine();
+                    System.out.print("$ Masukkan Nomor Telepon Anda: ");
+                    nomorTeleponPendaftar = input.nextLine();
+                    System.out.print("$ Masukkan Peran Anda: ");
+                    peranPendaftar = input.nextLine();
+                    while (true) {
+                        System.out.print("$ Masukkan Username Akun: ");
+                        usernamePendaftar = input.nextLine();
+                        if (usernameNotExists(usernamePendaftar)) {
+                            break;
+                        } else {
+                            System.out.println("\nMasukkan username yang lain!\n");
+                        }
+                    }
+                    System.out.print("$ Masukkan Password Akun: ");
+                    passwordPendaftar = input.nextLine();
+                    kumpulanCivitasAkademik.add(new CivitasAkademik(UUID.randomUUID().toString(), namaPendaftar,
+                            emailPendaftar, nomorTeleponPendaftar,
+                            usernamePendaftar, passwordPendaftar, peranPendaftar));
+                }
+                case 3 -> {
+                    System.out.println("\nKeluar Aplikasi...\n");
+                    System.out.println("Terima Kasih");
+                    break OUTER;
+                }
+                default -> System.out.println("\nMenu tidak ditemukan!\n");
             }
         }
     }

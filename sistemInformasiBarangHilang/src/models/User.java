@@ -10,14 +10,14 @@ import static sisteminformasibaranghilang.Main.tempAdmin;
 import static sisteminformasibaranghilang.Main.tempCivak;
 import static sisteminformasibaranghilang.Main.tempPetugas;
 
-public class User {
+public abstract class User {
     // PROPERTY
-    private final String idPengguna;
-    private String namaPengguna;
-    private String emailPengguna;
-    private String nomorTeleponPengguna;
-    private String usernamePengguna;
-    private String passwordPengguna;
+    protected final String idPengguna;
+    protected String namaPengguna;
+    protected String emailPengguna;
+    protected String nomorTeleponPengguna;
+    protected String usernamePengguna;
+    protected String passwordPengguna;
     
     // CONSTRUCTOR
     protected User(String idPengguna, String namaPengguna, String emailPengguna, String nomorTeleponPengguna, String usernamePengguna, String passwordPengguna) {

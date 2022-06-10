@@ -48,4 +48,6 @@ public class PengambilanBarang {
     public void setIdPengambil(String idPengambil) {
         this.idPengambil = idPengambil;
     }
+
+
 }
