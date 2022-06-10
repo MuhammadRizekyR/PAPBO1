@@ -8,7 +8,7 @@ import static sisteminformasibaranghilang.Main.kumpulanPengambilanBarang;
 import static sisteminformasibaranghilang.Main.kumpulanPetugas;
 import static sisteminformasibaranghilang.Main.kumpulanUser;
 
-public class Admin extends User implements HakPetugas{
+public class Admin extends User {
     // CONSTRUCTOR
     public Admin(String idPengguna, String namaPengguna, String emailPengguna, String nomorTeleponPengguna,
             String usernamePengguna, String passwordPengguna) {
